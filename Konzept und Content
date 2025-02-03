@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const PASSWORD = "SOCIAL"; // Setze hier das gewünschte Passwort
+
+const sections = [
+  {
+    title: "Ziele des Social Media Konzepts",
+    content: [
+      "ANKÖ als attraktiven Arbeitgeber positionieren",
+      "Nachhaltige Werte und Umweltbewusstsein von ANKÖ hervorheben",
+      "Interaktion mit potenziellen Bewerbern und Mitarbeitenden stärken",
+      "Transparenz über Unternehmenskultur und Benefits schaffen"
+    ]
+  },
+  {
+    title: "Zielgruppen",
+    content: [
+      "Potenzielle Bewerber mit Interesse an nachhaltigen Arbeitgebern",
+      "Bestehende Mitarbeitende zur Förderung der Identifikation mit ANKÖ",
+      "Unternehmen und Partner, die nachhaltige Beschaffung priorisieren"
+    ]
+  },
+  {
+    title: "Content-Säulen",
+    content: [
+      "Mitarbeiter & Unternehmenskultur",
+      "Nachhaltigkeit bei ANKÖ",
+      "Karriere & Entwicklungsmöglichkeiten"
+    ]
+  }
+];
+
+const contentPlan = [
+  {
+    category: "Mitarbeiter & Unternehmenskultur",
+    content: [
+      "Mein ANKÖ-Moment – Mitarbeitende teilen ihre schönsten Erlebnisse",
+      "Warum ANKÖ? – Mitarbeitende erzählen, warum sie gerne hier arbeiten",
+      "Job-Shadowing – Mini-Serie zur Vorstellung verschiedener Abteilungen"
+    ]
+  },
+  {
+    category: "Nachhaltigkeit bei ANKÖ",
+    content: [
+      "Grüne ANKÖ-Tipps – Nachhaltige Arbeitsgewohnheiten im Büro",
+      "Nachhaltigkeit in der Beschaffung – Wie ANKÖ nachhaltige Prozesse unterstützt"
+    ]
+  }
+];
+
+export default function ANKOESocialMediaConcept() {
+  const [activePage, setActivePage] = useState("login");
+  const [openSection, setOpenSection] = useState(null);
+  const [inputPassword, setInputPassword] = useState("");
+
+  function handleLogin() {
+    if (inputPassword === PASSWORD) {
+      setActivePage("konzept");
+    }
+  }
+
+  if (activePage === "login") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-red-100">
+        <h1 className="text-2xl font-bold text-red-700 mb-4">Passwortgeschützte ANKÖ Web-App</h1>
+        <input 
+          type="password" 
+          className="border p-2 mb-2" 
+          placeholder="Passwort eingeben" 
+          value={inputPassword} 
+          onChange={(e) => setInputPassword(e.target.value)}
+        />
+        <Button className="bg-red-500 text-white px-4 py-2" onClick={handleLogin}>Login</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 max-w-3xl mx-auto bg-red-100 min-h-screen">
+      <div className="flex justify-center space-x-4 mb-6">
+        <Button className={`px-4 py-2 ${activePage === "konzept" ? "bg-red-500 text-white" : "bg-red-300"}`} onClick={() => setActivePage("konzept")}>Konzept</Button>
+        <Button className={`px-4 py-2 ${activePage === "content" ? "bg-red-500 text-white" : "bg-red-300"}`} onClick={() => setActivePage("content")}>Content Plan</Button>
+      </div>
+
+      {activePage === "konzept" && (
+        <div>
+          <h1 className="text-2xl font-bold text-center mb-6 text-red-700">ANKÖ Social Media Konzept</h1>
+          {sections.map((section, index) => (
+            <Card key={index} className="mb-4">
+              <CardContent>
+                <Button
+                  className="w-full text-left text-lg font-semibold bg-red-500 text-white p-2 rounded-md"
+                  onClick={() => setOpenSection(openSection === index ? null : index)}
+                >
+                  {section.title}
+                </Button>
+                {openSection === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-2"
+                  >
+                    {section.content.map((item, idx) => (
+                      <p key={idx} className="text-red-900 mt-1">- {item}</p>
+                    ))}
+                  </motion.div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {activePage === "content" && (
+        <div>
+          <h1 className="text-2xl font-bold text-center mb-6 text-red-700">ANKÖ Content Plan</h1>
+          {contentPlan.map((category, index) => (
+            <Card key={index} className="mb-4">
+              <CardContent>
+                <h2 className="text-lg font-semibold text-red-700">{category.category}</h2>
+                <ul className="list-disc list-inside mt-2">
+                  {category.content.map((item, idx) => (
+                    <li key={idx} className="text-red-900">{item}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
